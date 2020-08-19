@@ -9,6 +9,7 @@ class PagesController extends Controller
 {
      public function index(Request $request)
      {
+
          $zero = encrypt(0);
          $p = $request->get('p')??$zero;
 
@@ -19,13 +20,17 @@ class PagesController extends Controller
          if($pid >0){
              $product = Product::where("id",$pid)->first();
 
-         }else {
+         }
+         else {
              if ($p < 0) {
                  $p = 0;
              }
              $product = Product::skip($p)->first();
          }
-         if (!$product) abort(404);
+         if (!$product) {
+             $p = 0;
+             $product = Product::skip($p)->first();
+         }
          return view("index", ["product" => $product, 'page' => $p]);
 
      }
